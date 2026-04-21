@@ -14,6 +14,14 @@ body {
   box-sizing: border-box;
 }
 
+container {
+  max-width: 840px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 16px;
+}
+
 .container {
   max-width: 840px;
   margin: 0 auto;
@@ -444,7 +452,7 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   updateAll();
 });
 
-// ── PHOTO PICK + DRAG + PINCH ZOOM ──────────────────────────────────
+// PHOTO PICK + DRAG + PINCH ZOOM
 const imageBox   = document.getElementById('imageBox');
 const photoInput = document.getElementById('photoInput');
 
@@ -548,7 +556,7 @@ function attachControls(container) {
   });
 }
 
-// ── SAVE: renders card to canvas, shows overlay so user can long-press ──
+// SAVE: render card, show overlay for long‑press save
 document.getElementById('saveBtn').addEventListener('click', () => {
   const card = document.getElementById('card');
   html2canvas(card, {
