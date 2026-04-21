@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Text Product Pic and Details</title>
 <style>
 body {
@@ -25,7 +26,7 @@ body {
   background: #ffffff;
   border-radius: 8px;
   padding: 12px 16px 14px;
-  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 25px rgba(15,23,42,0.08);
   border: 1px solid #e5e7eb;
 }
 
@@ -102,7 +103,6 @@ input[type="number"]:focus {
   pointer-events: none;
 }
 
-/* CARD */
 .card-wrapper {
   display: flex;
   flex-direction: column;
@@ -114,16 +114,15 @@ input[type="number"]:focus {
   border-radius: 8px;
   border: 1px solid #e5e7eb;
   overflow: hidden;
-  width: 360px;
+  width: 380px;
   max-width: 100%;
   margin: 0 auto;
   box-shadow: 0 4px 14px rgba(15,23,42,0.09);
 }
 
-/* IMAGE AREA */
 .card-image {
   width: 100%;
-  height: 320px;
+  height: 340px;
   background: #f3f4f6;
   display: flex;
   align-items: center;
@@ -156,56 +155,55 @@ input[type="number"]:focus {
   -webkit-user-drag: none;
 }
 
-/* CARD TEXT — matches your reference image */
+/* ── CARD TEXT: matched to your chain reference image ── */
 .card-body {
-  padding: 14px 16px 14px;
+  padding: 14px 16px 16px;
 }
 
 .card-title {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
   color: #111827;
-  margin: 0 0 3px 0;
+  margin: 0 0 4px 0;
   line-height: 1.3;
 }
 
 .card-metal {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 400;
   color: #374151;
   margin: 0 0 2px 0;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .card-specs {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 400;
   color: #374151;
   margin: 0 0 0 0;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .card-price {
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 800;
   color: #111827;
-  margin: 12px 0 4px 0;
-  line-height: 1.2;
+  margin: 12px 0 5px 0;
+  line-height: 1.15;
 }
 
 .card-contact {
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 400;
   color: #6b7280;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
   margin: 0;
-  /* prevent iOS blue link */
   -webkit-text-fill-color: #6b7280;
   text-decoration: none !important;
 }
 
-/* force any auto-linked phone/email to match */
 .card-contact a,
 .card-contact a:link,
 .card-contact a:visited,
@@ -240,6 +238,46 @@ input[type="number"]:focus {
   color: #f9fafb;
   border-color: #111827;
 }
+
+/* overlay shown after save so user can long-press */
+#saveOverlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 9999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#saveOverlay img {
+  max-width: 100%;
+  max-height: 75vh;
+  border-radius: 8px;
+  display: block;
+}
+
+#saveOverlay p {
+  color: #ffffff;
+  font-size: 16px;
+  text-align: center;
+  margin: 16px 0 0;
+  font-family: system-ui, sans-serif;
+}
+
+#closeOverlay {
+  margin-top: 14px;
+  padding: 10px 28px;
+  border-radius: 999px;
+  border: none;
+  background: #ffffff;
+  color: #111827;
+  font-size: 14px;
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -272,11 +310,11 @@ input[type="number"]:focus {
           <span class="spec-unit">g</span>
         </div>
         <div class="spec-wrap">
-          <input id="spec2" type="text" placeholder='24'>
+          <input id="spec2" type="text" placeholder="24">
           <span class="spec-unit">"</span>
         </div>
         <div class="spec-wrap">
-          <input id="spec3" type="text" placeholder="2">
+          <input id="spec3" type="text" placeholder="X">
           <span class="spec-unit">mm</span>
         </div>
       </div>
@@ -303,7 +341,7 @@ input[type="number"]:focus {
     <div id="previewText" class="preview-text"></div>
   </div>
 
-  <!-- RIGHT: CARD PREVIEW -->
+  <!-- RIGHT: CARD -->
   <div class="panel">
     <h2>Card Preview</h2>
     <div class="card-wrapper">
@@ -329,17 +367,22 @@ input[type="number"]:focus {
   </div>
 </div>
 
+<!-- SAVE OVERLAY: image appears here, long-press to save -->
+<div id="saveOverlay">
+  <img id="overlayImg" src="" alt="Card">
+  <p>Long-press the image above,<br>then tap <strong>Save to Photos</strong></p>
+  <button id="closeOverlay">Done</button>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
   integrity="sha512-BNa5lG2P+4O1QRbt7YIAO1VdlEbcFpMhF5Bvl2uR2rNvqA7qO5uSuyFJfVTuqq5LiklCgEeqY6VJQmBMRQ4YLg=="
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
-// Title-case helper
 function toTitleCase(str) {
-  return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1));
+  return str.replace(/\w\S*/g, t => t.charAt(0).toUpperCase() + t.substr(1));
 }
 
-// Auto-capitalize on each text input as user types
 ['clientName','itemName','metal','note'].forEach(id => {
   const el = document.getElementById(id);
   el.addEventListener('input', function() {
@@ -367,20 +410,18 @@ function updateAll() {
   const note   = document.getElementById('note').value.trim();
   const showContact = document.getElementById('contactToggle').checked;
 
-  // Build specs — only include filled slots, no space before g/mm
   const parts = [];
   if (spec1) parts.push(spec1 + 'g');
   if (spec2) parts.push(spec2 + '"');
   if (spec3) parts.push(spec3 + 'mm');
   const specs = parts.join(' * ');
 
-  document.getElementById('cardTitle').textContent  = item  || 'Item Title';
-  document.getElementById('cardMetal').textContent  = metal || 'Metal';
-  document.getElementById('cardSpecs').textContent  = specs || 'Specs';
-  document.getElementById('cardPrice').textContent  = formatPrice(price) || '$0';
+  document.getElementById('cardTitle').textContent = item  || 'Item Title';
+  document.getElementById('cardMetal').textContent = metal || 'Metal';
+  document.getElementById('cardSpecs').textContent = specs || 'Specs';
+  document.getElementById('cardPrice').textContent = formatPrice(price) || '$0';
   document.getElementById('cardContact').style.display = showContact ? 'block' : 'none';
 
-  // Preview text
   const firstName = client ? client.split(' ')[0] : '';
   const greeting  = note || (firstName ? `Hi ${firstName},` : '');
   const lines = [];
@@ -403,7 +444,7 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   updateAll();
 });
 
-// ── PHOTO: pick, drag, zoom ──────────────────────────────────────────
+// ── PHOTO PICK + DRAG + PINCH ZOOM ──────────────────────────────────
 const imageBox   = document.getElementById('imageBox');
 const photoInput = document.getElementById('photoInput');
 
@@ -446,11 +487,9 @@ function attachControls(container) {
   let sx = 0, sy = 0, sox = 0, soy = 0;
   let pinchD0 = 0, pinchS0 = 1;
 
-  // MOUSE
   container.addEventListener('mousedown', e => {
     if (e.target.tagName !== 'IMG') return;
-    img = e.target;
-    dragging = true;
+    img = e.target; dragging = true;
     sx = e.clientX; sy = e.clientY;
     sox = parseFloat(img.dataset.ox || 0);
     soy = parseFloat(img.dataset.oy || 0);
@@ -468,7 +507,6 @@ function attachControls(container) {
     if (img) img.style.cursor = 'grab';
   });
 
-  // TOUCH drag + pinch
   container.addEventListener('touchstart', e => {
     img = container.querySelector('img');
     if (!img) return;
@@ -484,17 +522,18 @@ function attachControls(container) {
       pinchD0 = Math.sqrt(dx*dx + dy*dy);
       pinchS0 = parseFloat(img.dataset.scale || 1);
     }
-  }, { passive: false });
+  }, { passive: true });
 
   container.addEventListener('touchmove', e => {
     img = container.querySelector('img');
     if (!img) return;
-    e.preventDefault();
     if (e.touches.length === 1 && dragging) {
+      e.preventDefault();
       img.dataset.ox = sox + (e.touches[0].clientX - sx);
       img.dataset.oy = soy + (e.touches[0].clientY - sy);
       applyTransform(img);
     } else if (e.touches.length === 2) {
+      e.preventDefault();
       const dx = e.touches[0].clientX - e.touches[1].clientX;
       const dy = e.touches[0].clientY - e.touches[1].clientY;
       const d  = Math.sqrt(dx*dx + dy*dy);
@@ -509,7 +548,7 @@ function attachControls(container) {
   });
 }
 
-// ── SAVE CARD AS IMAGE ───────────────────────────────────────────────
+// ── SAVE: renders card to canvas, shows overlay so user can long-press ──
 document.getElementById('saveBtn').addEventListener('click', () => {
   const card = document.getElementById('card');
   html2canvas(card, {
@@ -519,31 +558,19 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     allowTaint: true,
     logging: false
   }).then(canvas => {
-    const name   = (document.getElementById('itemName').value.trim() || 'jewelry-card');
     const dataUrl = canvas.toDataURL('image/png');
-
-    // Open image in new tab — on iPad long-press the image → Save to Photos
-    const win = window.open('', '_blank');
-    if (win) {
-      win.document.write(`<!DOCTYPE html><html><head>
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>${name}</title>
-        <style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:flex-start;}
-        img{width:100%;max-width:600px;display:block;}</style>
-        </head><body>
-        <img src="${dataUrl}" alt="${name}">
-        <p style="color:#fff;text-align:center;font-size:14px;padding:12px;">
-          Long-press the image above, then tap <strong>Save to Photos</strong>.
-        </p>
-        </body></html>`);
-      win.document.close();
-    } else {
-      alert('Popup was blocked. Please allow popups for this site, then try again.');
-    }
+    const overlay  = document.getElementById('saveOverlay');
+    const overlayImg = document.getElementById('overlayImg');
+    overlayImg.src = dataUrl;
+    overlay.style.display = 'flex';
   }).catch(err => {
     console.error(err);
-    alert('Could not create image — make sure you are online and try again.');
+    alert('Could not create image. Make sure you are online and try again.');
   });
+});
+
+document.getElementById('closeOverlay').addEventListener('click', () => {
+  document.getElementById('saveOverlay').style.display = 'none';
 });
 
 updateAll();
